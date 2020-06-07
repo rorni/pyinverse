@@ -33,9 +33,9 @@ def maximize_likelihood_EM(y, x0, proj, max_iter=100, abstol=1.e-8, smooth=None)
 
     M = y.size
     N = x0.size
-    if proj.shape != (N, M):
+    if proj.shape != (M, N):
         raise ValueError('Inconsistent shape of proj: {0}.'.format(proj.shape))
-    if not smooth:
+    if smooth is None:
         smooth = np.eye(N)
     if smooth.shape != (N, N):
         raise ValueError('Inconsistent shape of smooth operator: {0}'.format(smooth.shape))
@@ -54,7 +54,7 @@ def maximize_likelihood_EM(y, x0, proj, max_iter=100, abstol=1.e-8, smooth=None)
 
         if iter == max_iter:
             break
-        if np.linalg.norm(y, np.dot(proj, x_new)) < abstol:
+        if np.linalg.norm(y - np.dot(proj, x_new)) < abstol:
             break
 
         x_old = x_new
