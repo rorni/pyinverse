@@ -42,6 +42,8 @@ def maximize_likelihood_EM(y, x0, proj, max_iter=100, abstol=1.e-8, smooth=None)
 
     S = 1.0 / np.sum(proj, axis=0)
 
+    sum_log_k = np.sum([sum_of_factorial_logs(yi) for yi in y])
+
     x_old = x0
     iter = 0
 
@@ -52,6 +54,9 @@ def maximize_likelihood_EM(y, x0, proj, max_iter=100, abstol=1.e-8, smooth=None)
         
         x_new = np.dot(smooth, x_new)
 
+        lam = np.dot(proj, x_new)
+        logp = np.dot(y, np.log(lam)) - np.sum(lam) - sum_log_k
+
         if iter == max_iter:
             break
         if np.linalg.norm(y - np.dot(proj, x_new)) < abstol:
@@ -59,5 +64,11 @@ def maximize_likelihood_EM(y, x0, proj, max_iter=100, abstol=1.e-8, smooth=None)
 
         x_old = x_new
         iter += 1
-    return x_new
+    return x_new, logp
 
+
+def sum_of_factorial_logs(k):
+    result = 0
+    for i in range(1, k+1):
+        result += np.log(i)
+    return result
