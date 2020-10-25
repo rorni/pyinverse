@@ -3,5 +3,6 @@ from setuptools import setup
 
 setup(
     name="pyinverse",
+    packages=['pyinverse'],
     version="0.1.0"
 )
