@@ -66,6 +66,7 @@ def maximize_likelihood_EM(y, proj, x0=None, max_iter=100, reltol=1.e-8,
 
     proj = proj[index_row, :][:, index_col]
     y = y[index_row]
+    smooth = smooth[index_col, :][:, index_col]
 
     x1 = x0[index_col]
 
@@ -112,6 +113,7 @@ def _mle_em(y, proj, x0, max_iter, reltol, smooth):
 def _mle_em_cuda(y, proj, x0, max_iter, reltol, smooth):
     sum_log_k = np.sum([factorial_log(yi) for yi in y])
     proj = cp.asarray(proj)
+    smooth = cp.asarray(smooth)
     y = cp.asarray(y)
     x_old = cp.asarray(x0)
     S = cp.divide(1, cp.sum(proj, axis=0))
